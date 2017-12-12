@@ -1,0 +1,677 @@
+<html>
+
+<head>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <!-- Compiled and minified CSS Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Compiled and minified jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        i {
+            cursor: pointer;
+            color: #fff !important;
+        }
+        
+        button label {
+            color: #fff !important;
+            cursor: pointer;
+        }
+        
+        #iconHelp {
+            color: #9e9e9e;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        /*LOAD*/
+        
+        #Pag_load,
+        #Pag_success {
+            width: 100%;
+            text-align: center;
+            margin-top: 50%;
+        }
+        
+        #lbl_carga {
+            margin-top: 5%;
+            color: #616161 !important;
+            font-weight: bold;
+        }
+        
+        /*MENU NAV TOP*/
+        
+        .brand-logo {
+            width: 100%;
+            margin-left: 15px;
+        }
+        
+        .nav-wrapper {
+            position: fixed;
+            width: 100%;
+            background-color: #3D986C !important;
+        }
+        
+        ul {
+            position: relative;
+            z-index: 1;
+        }
+        /*HOME*/
+        
+        #img_lz_container {
+            margin-top: 100px;
+            text-align: center;
+            width: 100%
+        }
+        
+        #lz_lbl {
+            font-size: 40px;
+            color: #757575;
+        }
+        
+        #lz_desc_lbl {
+            font-size: 15px;
+        }
+        /*USERS*/
+        
+        #Pag_users {
+            text-align: center;
+            margin: 2%;
+            height: 70%;
+        }
+        
+        #ask_lbl_cont {
+            padding-top: 5%;
+            margin-bottom: 4%;
+        }
+        
+        #select_sheet {
+            display: inline;
+        }
+        
+        #container_float_users {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            margin-right: 2%;
+            margin-bottom: 5%;
+        }
+        
+        .btn-floating {
+            margin-bottom: 10%;
+        }
+        
+        #btn_list_users {
+            padding-bottom: 10%;
+            background-color: #3D986C !important;
+        }
+        
+       #select_refresh{
+            cursor: pointer;
+            color: #616161 !important;
+        }
+        
+        #tableSelect {
+            margin-left: 3%
+        }
+        
+        /*CREATE USERS*/
+        
+        #Pag_create {
+            text-align: center;
+            margin: 2%;
+            height: 70%;
+        }
+        
+        #lbl_pag_create_cont {
+            text-align: left;
+            padding-top: 5%;
+            margin-bottom: 4%;
+            margin-left: 4%;
+            margin-right: 4%
+        }
+        
+        #btn_container_create {
+            text-align: center;
+        }
+        
+        #btn_container_create button {
+            width: 80%;
+            margin-top: 5%
+        }
+        
+        #Pag_create ol{
+            font-size: 80%;
+            color: #9e9e9e;
+        }
+        #Pag_create ol li{
+            margin-bottom: 3%;
+        }
+        
+        #i_refr_dv{
+        vertical-align: middle;
+        color: #9e9e9e!important;
+        margin-left: 2%;
+        }
+        
+        #i_refr_dv:hover {
+        color: #2196f3!important;
+        }
+        
+        #wr_ref_dv{
+        margin-left:5%;
+        }
+
+        
+        /*FOOTER*/
+        
+        #div-logo {
+            position: fixed;
+            bottom: 0px;
+            width: 100%;
+            height: 30px;
+            background-color: #ffffff;
+            border-top: 1px solid #dcdcdc;
+            text-align: right;
+        }
+        
+        #logo {
+            margin-right: 5%;
+            float: right;
+            height: 30px;
+            width: 80px;
+            position: relative;
+            /*El div será ubicado con relación a la pantalla*/
+        }
+        
+        #feedback {
+            float: left;
+            margin-left: 3%;
+            margin-top: 1%;
+            color: #4caf50 !important;
+        }
+
+    </style>
+
+
+    <script>
+        var myInterval;
+        var cont_string = 0;
+
+        window.onload = function() {
+            navigate("to_load");
+            google.script.run.withSuccessHandler(init).getLang();
+            //Rellena el select con los nombres de las hojas.
+            fillSelectSheet();
+
+        };
+
+        ///////////////////////////////////////////////////////////////////
+        // Asigna los strings al componente html si el idioma de usuario es español.
+        //////////////////////////////////////////////////////////////////
+        function continueInit() {
+            $('#go_users').text('Usuarios');
+            $('#lz_desc_lbl').text('Administra usuarios y unidades organizativas de forma sencilla');
+            $('#ask_lbl').text('Selecciona la hoja con con la que va a trabajar.');
+            $('#lbl_btn_list').text('Listar usuarios');
+            $('#lbl_pag_create').text('Prepara las cuentas de usuario a partir del nombre y apellidos. Crea nuevos emails, genera contraseñas y reduce al mínimo los duplicados de forma automática.');
+            $('#lbl_btn_prepare').text('Preparar cuentas');
+            $('#lbl_btn_create').text('Crear cuentas');
+            $('#lbl_btn_checkErrors').text('Comprobar errores');
+            $('#lbl_btn_mails').text('email credenciales');
+            $('#lbl_create1').text('Prepara las cuentas de los usuarios.');
+            $('#lbl_create2').text('Crea las nuevas cuentas en la consola.');
+            $('#lbl_create3').text('Detecta y mueve registos de usuarios no creados segun su estado.');
+            $('#btn_prepare').attr('title', 'Prepara las cuentas de usuarios con datos válidos.');
+            $('#lbl_ref_dv').text('Si deseas, puedes refrescar el desplegable de dominios y U.O aquí.');
+           
+            
+            setTimeout(function() {
+                navigate("to_home");
+            }, 2000);
+            return;
+        }
+
+
+
+
+        ///////////////////////////////////////////////////////////////////
+        //Traduce los strings si esta en un idioma diferente al español
+        //////////////////////////////////////////////////////////////////
+        function init(lang) {
+
+            // Si el idioma no es el español, traduce todas las frases de la página
+            if (lang != 'es') {
+                // Cada segundo, llama a una función que comprueba que se hayan traducido todas las frases
+                myInterval = setInterval(function() {
+                    checkTranslates()
+                }, 1000);
+
+                google.script.run.withSuccessHandler(function(texto) {
+                    $('#go_users').text(texto);
+                    cont_string++
+                }).translate('Usuarios');
+                google.script.run.withSuccessHandler(function(texto) {
+                    $('#lz_desc_lbl').text(texto);
+                    cont_string++
+                }).translate('Administra usuarios y unidades organizativas de forma sencilla');
+                google.script.run.withSuccessHandler(function(texto) {
+                    $('#ask_lbl').text(texto);
+                    cont_string++
+                }).translate('Selecciona la hoja preparada para crear usuarios.');
+                google.script.run.withSuccessHandler(function(texto) {
+                    $('#lbl_btn_list').text(texto);
+                    cont_string++
+                }).translate('Listar usuarios');
+                google.script.run.withSuccessHandler(function(texto) {
+                    $('#lbl_pag_create').text(texto);
+                    cont_string++
+                }).translate('Prepara las cuentas de usuario a partir del nombre y apellidos. Crea nuevos emails, genera contraseñas y reduce al mínimo los duplicados de forma automática.');
+                google.script.run.withSuccessHandler(function(texto) {
+                    $('#lbl_btn_prepare').text(texto);
+                    cont_string++
+                }).translate('Preparar cuentas');
+                google.script.run.withSuccessHandler(function(texto) {
+                    $('#lbl_btn_create').text(texto);
+                    cont_string++
+                }).translate('Crear cuentas');
+                google.script.run.withSuccessHandler(function(texto) {
+                    $('#lbl_btn_checkErrors').text(texto);
+                    cont_string++
+                }).translate('Comprobar errores');
+                google.script.run.withSuccessHandler(function(texto) {
+                    $('#lbl_btn_mails').text(texto);
+                    cont_string++
+                }).translate('email credenciales');
+                
+                google.script.run.withSuccessHandler(function(texto) {
+                    $('#lbl_create1').text(texto);
+                    cont_string++
+                }).translate('Prepara las cuentas de los usuarios.');
+                google.script.run.withSuccessHandler(function(texto) {
+                    $('#lbl_create2').text(texto);
+                    cont_string++
+                }).translate('Crea las nuevas cuentas en la consola.');
+                google.script.run.withSuccessHandler(function(texto) {
+                    $('#lbl_create3').text(texto);
+                    cont_string++
+                }).translate('Detecta y mueve registos de usuarios no creados segun su estado.');
+                google.script.run.withSuccessHandler(function(texto) {
+                    $('#btn_prepare').attr('title', texto);
+                    cont_string++
+                }).translate('Prepara las cuentas de usuarios con datos válidos.');
+                google.script.run.withSuccessHandler(function(texto) {
+                    $('#lbl_ref_dv').text(texto);
+                    cont_string++
+                }).translate('Si deseas, puedes refrescar el desplegable de dominios y U.O aquí.');
+
+
+
+            } else {
+                continueInit();
+            }
+        }
+
+
+        ///////////////////////////////////////////////////////////////////
+        // Comprueba si se han realizado todas las traducciones
+        //////////////////////////////////////////////////////////////////
+        function checkTranslates() {
+            if (cont_string == 14) {
+                clearInterval(myInterval); // En caso afirmativo para la llamada a esta función
+                setTimeout(function() {
+                    navigate("to_home");
+                }, 2000);
+            }
+        }
+
+
+
+        ///////////////////////////////////////////////////////////////////
+        // Rellena el select con los nombres de las hojas.
+        //////////////////////////////////////////////////////////////////
+        function fillSelectSheet(){
+            $('#select_sheet').empty();
+            google.script.run.withSuccessHandler(function(sheetsNames) {
+                for (var i = 0; i < sheetsNames.length; i++) {
+                    $('#select_sheet').append('<option value="' + sheetsNames[i] + '">' + sheetsNames[i] + '</option>');
+                }
+            }).getSheetsNames();
+}
+
+
+
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Ejecuta la función de creacion de usuarios pasando como parametros el nombre la hoja con la que trabajará.
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        function crearUsuarios(click) {
+            google.script.run.withSuccessHandler(function(texto) {
+                $('#lbl_carga').text(texto);
+            }).translate('Creando usuarios...');
+            navigate("to_load");
+
+            google.script.run.withSuccessHandler(function(rsp) {
+                switch (rsp) {
+                    case "success":
+                        console.log("lote FINAL");
+                        google.script.run.withSuccessHandler(function(properties) {
+                        
+                            var usuariosCreados = properties[1], //Extrae el nº de usuarios creados de las propiedades.
+                                sendEmail = properties[2]; //Extrae si el envio de emails está activado.
+                            google.script.run.aviso("El proceso ha finalizado.\nSe crearon " + parseFloat(usuariosCreados).toFixed(0) + " usuarios");
+                        }).get_userProperties();
+                        navigate("to_create");
+                        break;
+                    case "failed":
+                        console.log("ha fallado");
+                        navigate("to_create");
+                        break;
+                    case "cancel":
+                        navigate("to_create");
+                        return;
+                        break;
+                    case "next":
+                        console.log("otro lote");
+                        crearUsuarios(false); //llama de nuevo a crear usuarios indicando que no es la primera llamada.
+                        return;
+                        break;
+                    default:
+                        return;
+                        break;
+                }
+                return;
+            }).selectorCreateUsers($("#select_sheet").val(), click); // Envía la opción seleccinada a la funcion del servidor.
+        }
+
+
+
+        function prepararCuentas() {
+            //Cambia el texto de la pantalla de carga y la muestra.
+            google.script.run.withSuccessHandler(function(texto) {
+                $('#lbl_carga').text(texto);
+            }).translate('Preparando nuevas cuentas...');
+            navigate("to_load");
+
+            google.script.run.withSuccessHandler(function(rsp) {
+                navigate("to_create");
+                return;
+            }).prepare_users_account($("#select_sheet").val());
+
+
+        }
+
+
+        function comprobarErrores() {
+            //Cambia el texto de la pantalla de carga y la muestra.
+            google.script.run.withSuccessHandler(function(texto) {
+                $('#lbl_carga').text(texto);
+            }).translate('Detectando cuentas no creadas...');
+            navigate("to_load");
+
+            google.script.run.withSuccessHandler(function(rsp) {
+                navigate("to_create");
+                return;
+            }).detectErrors();
+        }
+        
+        function listarUsuarios() {
+            //Cambia el texto de la pantalla de carga y la muestra.
+            google.script.run.withSuccessHandler(function(texto) {
+                $('#lbl_carga').text(texto);
+            }).translate('Cargando usuarios en la hoja...');
+            navigate("to_load");
+
+            google.script.run.withSuccessHandler(function(rsp) {
+                navigate("to_users");
+                return;
+            }).listUsers($("#selectS_sheet").val());
+        }
+
+
+
+        function enviarCredenciales(){
+           google.script.run.sendCredentials();
+        }
+
+
+
+
+
+        ///////////////////////////////////////////////////////////////////
+        // Navega por las distintas pantallas del complemento.
+        //////////////////////////////////////////////////////////////////
+        function navigate(dest) {
+        
+        switch(dest) {
+    case "to_home":
+        $("#Pag_users").fadeOut("slow");
+        $("#Pag_create").fadeOut("slow");
+        $("#Pag_load").fadeOut("slow");
+        setTimeout(function() {
+         $("nav").show().fadeIn("slow");
+         $("#Pag_home").fadeIn('slow');
+        }, 500);
+        break;
+    case "to_users":
+         $("#Pag_create").fadeOut("slow");
+         $("#Pag_home").fadeOut("slow");
+         $("#Pag_load").fadeOut("slow");
+         setTimeout(function() {
+          $("nav").show().fadeIn("slow");
+          $("#Pag_users").fadeIn("slow");
+         }, 500);
+        break;
+    case "to_load":
+        $("nav").fadeOut("slow");
+        $("#Pag_users").fadeOut("slow");
+        $("#Pag_create").fadeOut("slow");
+        $("#Pag_home").fadeOut("slow");
+        setTimeout(function() {
+         $("#Pag_load").fadeIn("fast");
+        }, 500);
+        break;
+    case "to_create":
+        $("#Pag_users").fadeOut("slow");
+        $("#Pag_load").fadeOut("slow");
+        $("#Pag_home").fadeOut("slow");
+        setTimeout(function() {
+          $("nav").show().fadeIn("slow");
+          $("#Pag_create").fadeIn("slow");
+        }, 500);
+        break;
+    default:
+        return;
+}
+        }
+        ////////////////////////////////////////////////
+
+    </script>
+</head>
+
+<body>
+
+
+    <!-- ///MENÚ///-->
+    <nav>
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo"><i id="icon_nav" class="material-icons">group_add</i></a>
+            <ul id="nav-mobile" class="right hide-off-med-and-down">
+                <li>
+                    <a id="go_users"></a>
+                </li>
+                <li><a id="go_uo">U.O</a></li>
+            </ul>
+        </div>
+    </nav>
+
+
+
+    <!-- ///PÁGINA DE CARGA///-->
+    <div id="Pag_load">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-green-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="lbl_carga"></div>
+    </div>
+
+
+
+
+    <!-- ///PÁGINA DE INICIO///-->
+    <div id="Pag_home">
+        <div id="img_lz_container">
+            <img id="img_lz" src="https://i.imgur.com/n39C81m.png" alt=""><br>
+            <label id="lz_lbl" for="img">LazySecretary</label><br>
+            <label id="lz_desc_lbl" for="img"></label>
+        </div>
+    </div>
+
+
+    <!-- ///PÁGINA DE USUARIOS///-->
+    <div id="Pag_users" class="card">
+        <div id="ask_lbl_cont">
+            <i id="iconHelp" title="" class="material-icons">help_outline</i>
+            <label id="ask_lbl"></label>
+        </div>
+        
+        
+        <table id="tableSelect">
+            <tr>
+                <td style="width: 95%" align="right"><select id="select_sheet"></select></td>
+                <td style="5%"><i id="select_refresh" class="material-icons left">refresh</i></td>
+            </tr>
+        </table>
+        
+        
+        <button id="btn_list_users" class="btn"><i class="material-icons left">format_list_bulleted</i><label id="lbl_btn_list"></label></button>
+
+        <div id="container_float_users">
+            <a id="btn_create_users" class="btn-floating btn-large waves-effect waves-light green"><i class="material-icons">add</i></a><br>
+
+            <a class="btn-floating btn-large waves-effect waves-light blue"><i class="material-icons">edit</i></a><br>
+
+            <a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">delete</i></a>
+        </div>
+
+
+    </div>
+
+
+    <!-- ///PÁGINA DE CREACIÓN DE USUARIOS///-->
+    <div id="Pag_create" class="card">
+        <div id="lbl_pag_create_cont">
+            <ol>
+                <li id="lbl_create1"></li>
+                <li id="lbl_create2"></li>
+                <li id="lbl_create3"></li>
+            </ol>
+            
+              <div id="wr_ref_dv"><label id="lbl_ref_dv"></label><i id="i_refr_dv" class="material-icons">refresh</i></div>
+             
+        </div>
+        <div id="btn_container_create">
+            <button title="" id="btn_prepare" class="btn green"><i class="material-icons left">playlist_add_check</i><label id="lbl_btn_prepare"></label></button>
+            <button id="btn_create" class="btn blue"><i class="material-icons left">playlist_add</i><label id="lbl_btn_create"></label></button>
+            <button id="btn_checkErrors" class="btn red"><i class="material-icons left">report</i><label id="lbl_btn_checkErrors"></label></button>
+            <button id="btn_checkErrors" class="btn orange"><i class="material-icons left">mail_outline</i><label id="lbl_btn_mails"></label></button>
+        </div>
+    </div>
+
+    <script>
+        //////////////////////////////////////////////////////////////////////////////////////
+        //.CLICK FUNCTIONS
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        //****MENÚ ACTIONS****//
+
+        //Navega a la pantalla de gestión usuarios.
+        $('#go_users').click(function() {
+            fillSelectSheet();
+            navigate("to_users");
+        });
+
+        //Navega a la pantalla de inicio.
+        $('.brand-logo').click(function() {
+            navigate("to_home");
+        });
+
+
+
+
+        //****PÁGINA DE USUARIOS ACTIONS****//
+
+        //Navega a la pantalla de creación de usuarios.
+        $('#btn_create_users').click(function() {
+            navigate("to_create");
+        });
+        
+        $('#select_refresh').click(function() {
+            fillSelectSheet();
+        });
+        
+        $('#btn_list_users').click(function() {
+            listarUsuarios();
+        });
+
+
+
+        //****PÁGINA DE CREAR USUARIOS ACTIONS****//
+        $('#btn_prepare').click(function() {
+            prepararCuentas();
+        });
+
+        $('#btn_checkErrors').click(function() {
+           comprobarErrores();
+        });
+
+        $('#btn_create').click(function() {
+            crearUsuarios(true);
+        });
+        
+        $('#btn_checkErrors').click(function() {
+           enviarCredenciales();
+        });
+        
+        
+        $('#i_refr_dv').click(function() {
+            google.script.run.refresh_DV($("#select_sheet").val())
+        });
+        
+
+    </script>
+
+</body>
+
+<!-- ///FOOTER///-->
+<!-- ///Logo Ieducando (enlace a la web)///-->
+<footer id="div-logo">
+    <i id="feedback" class="material-icons" onclick=" google.script.run.openFeedback()">feedback</i>
+    <a id="logourl" href="http://www.ieducando.com"><img id="logo" src="http://i.imgur.com/ztHGHXY.png"></a>
+</footer>
+
+</html>

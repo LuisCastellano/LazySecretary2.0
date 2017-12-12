@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+      <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+    <!-- Compiled and minified jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+    
+    
+    <style>
+       
+        #load_sheets{
+            width: 100%;
+            text-align-last: center;
+            
+        }
+        
+        #load_container{
+            vertical-align: middle;
+            margin-top: 6%;
+            margin-bottom: 2%
+        }
+        
+        label{
+        color: #616161;
+        }
+      </style>
+    <script>
+    
+     google.script.run.withSuccessHandler(function(texto) {
+       $('label').text(texto);
+       }).translate('Preparando hojas de trabajo...');
+       prepare();         
+     
+     
+     
+     function prepare(){
+      google.script.run.withSuccessHandler(function(rsp) {
+       if(rsp){
+       google.script.host.close();
+       }
+       }).initialize();
+      }       
+    </script>
+  </head>
+  <body>
+  
+  <div id="load_sheets">
+     <div id=load_container>
+         <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-green-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+     </div>
+      <label for="load_container"></label>
+  </div>
+ 
+  </body>
+</html>
+
+

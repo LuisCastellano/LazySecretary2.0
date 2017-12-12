@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <!-- Compiled and minified jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <style>
+        select {
+            display: inline;
+        }
+        
+        #sendNameSheet {
+            margin-top: 15px;
+        }
+    </style>
+
+    <!--//SCRIPT CODE//-->
+    <script>
+        //traduce los textos.
+        google.script.run.withSuccessHandler(function(texto) {
+            $('#ask_lbl').text(texto);
+        }).translate('¿Selecciona la hoja con la que va a trabajar?');
+
+
+
+        //Rellena el select con los nombres de las hojas.
+        google.script.run.withSuccessHandler(function(sheetsNames) {
+            for (var i = 0; i < sheetsNames.length; i++) {
+                $('#selectSheet').append('<option value="' + sheetsNames[i] + '">' + sheetsNames[i] + '</option>');
+            }
+        }).getSheetsNames();
+        
+    </script>
+
+
+</head>
+
+<body>
+    <p id="ask_lbl" for="body"></p>
+    <select id="selectSheet">
+    </select>
+    <button id="sendNameSheet">OK</button>
+
+    <script>
+        $('#sendNameSheet').click(function() {
+        // Envía la opción seleccinada a la funcion del servidor.
+            google.script.run.selectorCreateUsers($("#selectSheet").val());
+        });
+    </script>
+
+</body>
+
+</html>
